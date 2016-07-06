@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>User Registration Page</title>
+	<style type="text/css">
+
+		hr {
+			width: 95%;
+			height: 5px;
+			margin-left: 0px;
+			background-color:#9370DB;
+			
+		}
+		label {
+			display: inline-block;
+			float: left;
+			text-align: right;
+			width: 110px;
+		}
+		progress {
+  		    border: none; 
+		}	
+
+	</style>
+
+	<script type="text/javascript">
+
+		function checkPwd() {
+			var score=0;
+			var desc = new Array();
+			desc[0] = "Weak";
+			desc[1] = "O.K.";
+			desc[2] = "Medium";
+			desc[3] = "Strong";
+			desc[4] = "Excellent";
+
+			var pass = document.getElementById("password").value;
+			var user = document.getElementById("userid").value;
+
+			if(~pass.indexOf(user)) {
+				alert("Password cannot be same as user id! Enter a different password!");
+			}
+
+			if(/\s/g.test(pass)) {
+				alert("No space allowed in password");
+			}
+
+			var len = pass.length;
+			if(len>=7 && len<=20) {
+				score++;
+			}
+			var exp1 = new RegExp("[a-zA-Z]{4}");
+			if(exp1.test(pass) == true) {
+				score++;
+			}
+
+			var exp2 = new RegExp("[0-9]{1}");
+			if(exp2.test(pass) == true) {
+				score++;
+			}
+
+			var exp3 = new RegExp("[!#$%]{1}");
+			if(exp3.test(pass) == true) {
+				score++;
+			}
+
+			var prog = document.getElementById("progbar");
+			prog.value = score;
+			var progVal = document.getElementById("div1");
+			progVal.innerHTML = desc[score];
+	
+		}
+
+
+		function pwdMatch() {
+			var pwd1 = document.getElementById("password");
+			var pwd2 = document.getElementById("confpass");
+			var msg = document.getElementById("confirmPwd");
+
+			var good = "#228B22";
+			var bad = "#FF0000";
+
+			if(pwd1.value == pwd2.value) {
+				msg.style.color = good;
+				msg.innerHTML = "Passwords match!";
+			}else {
+				msg.style.color = bad;
+				msg.innerHTML = "Oops! Passwords do not match!";
+			}
+		}
+
+
+		function emailMatch() {
+			var email1 = document.getElementById("email");
+			var email2 = document.getElementById("confemail");
+			var msg1 = document.getElementById("confirmEmail");
+
+			var good = "#228B22";
+			var bad = "#FF0000";
+
+			if(email1.value == email2.value) {
+				msg1.style.color = good;
+				msg1.innerHTML = "Email IDs match!";
+			}else {
+				msg1.style.color = bad;
+				msg1.innerHTML = "Oops! Email IDs do not match! Check again!";
+			}
+		}
+
+
+		function checkQ() {
+			var ques1 = document.getElementById("secqu1").value;
+			var ques2 = document.getElementById("secqu2").value;
+			if(ques1 == ques2) {
+				alert("Choose a different security question!");
+			}
+
+		}
+
+
+		function allowDrop(ev) {
+    		ev.preventDefault();
+		}
+
+
+		function drag(ev) {
+    		ev.dataTransfer.setData("text", ev.target.id);
+		}
+
+
+		function drop(ev) {
+    		var data = ev.dataTransfer.getData("text");
+    		ev.target.appendChild(document.getElementById(data));
+    		ev.target.ondrop = 'none';
+    		ev.preventDefault();
+    		return false;
+		}
+
+		function checkForm() {
+			var uid = document.getElementById("userid").value;
+			var pwd = document.getElementById("password").value;
+			var email = document.getElementById("email").value;
+			var sq1 = document.getElementById("secqu1").value;
+			var sa1 = document.getElementById("seca1").value;
+			var sq2 = document.getElementById("secqu2").value;
+			var sa2 = document.getElementById("seca2").value;
+			var phone = document.getElementById("phn").value;
+			var addr = document.getElementById("addr").value;
+			var interest = document.getElementById("interest").value;
+			var confpass = document.getElementById("confpass").value;
+			var confemail = document.getElementById("confemail").value;
+			if(uid==null || uid=="" || pwd==null || pwd==""
+				|| email==null || email=="" || sq1==null || sq1==""
+				|| sa1==null || sa1=="" || sq2==null || sq2==""
+				|| sa2==null || sa2=="" || phone==null || phone==""
+				|| confemail==null || confemail=="" || confpass==null || confpass==""
+				|| addr==null || addr=="" || interest==null || interest=="") {
+				alert("Please fill out all fields!");
+				return false;
+			}
+			else {
+				store();
+			}
+		}
+
+
+		function store() {
+			var uid = document.getElementById("userid").value;
+			var pwd = document.getElementById("password").value;
+			var email = document.getElementById("email").value;
+			var sq1 = document.getElementById("secqu1").value;
+			var sa1 = document.getElementById("seca1").value;
+			var sq2 = document.getElementById("secqu2").value;
+			var sa2 = document.getElementById("seca2").value;
+			var phone = document.getElementById("phn").value;
+			var addr = document.getElementById("addr").value;
+			var interest = document.getElementById("interest").value;
+
+			var xmlhttp = new XMLHttpRequest();
+				
+		
+			xmlhttp.open("POST", "Save", true);
+			xmlhttp.onreadystatechange = updated;
+			xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+			xmlhttp.send("uid=" + uid
+				+ "&pwd=" + pwd
+				+ "&email=" + email
+				+ "&phone=" + phone
+				+ "&sq1=" + sq1
+				+ "&sa1=" + sa1
+				+ "&sq2=" + sq2
+				+ "&sa2=" + sa2
+				+ "&addr=" + addr
+				+ "&interest=" + interest);
+
+			function updated() {
+				if(xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+					if(xmlhttp.responseText.indexOf("Failed") == 0) {
+						alert("Oops! Something went wrong. Please try again!");
+					}
+					else {
+						alert("Success! Your data is save successfully.");
+					}
+				}
+ 			}
+ 			return true;
+		}
+	</script>
+</head>
+<body>
+<form>
+<div class="container" style="width: 70%; margin: 0px auto; height: 700px;">
+	<header><img src="images\green-arrow.jpg" height="25px" /><b>Registration</b></header><hr>
+	
+		<label for="userid">User ID </label>&nbsp;&nbsp;&nbsp;&nbsp;
+		<input type="text" name="userid" id="userid" placeholder="Enter user id" autofocus required style="width: 20%;"/><br><br>
+		<label for="password">Password </label>&nbsp;&nbsp;&nbsp;&nbsp;
+		<input type="password" name="password" id="password" placeholder="Enter a password" autofocus required style="width: 20%;" onchange="checkPwd()" />
+		<a title="Password must be 7-20 characters in length and include 4 alpha characters; 1 numeric character(0,9) or 1 special character (!,#,$,%). The password is case sensitive and must not contain spaces or be the same as your user ID"><img src="images\qmark.jpg" height="15px" ></a>
+		<progress id="progbar" value="0" max="4"></progress><div style="display: inline;" id="div1"></div><br><br>
+		<label for="confpass">Confirm Password </label>&nbsp;&nbsp;&nbsp;&nbsp;
+		<input type="password" name="confpass" id="confpass" placeholder="Must be same as password" autofocus required style="width: 20%;" onchange="pwdMatch()" /><span id="confirmPwd" class="confirmPwd"></span><br><br>
+		<label for="email">Email </label>&nbsp;&nbsp;&nbsp;&nbsp;
+		<input type="email" name="email" id="email" placeholder="Enter valid email" autofocus required pattern="[^@]+@[^@]+\.[a-zA-Z]{2,6}" style="width: 20%;"/><br><br>
+		<label for="confemail">Confirm Email </label>&nbsp;&nbsp;&nbsp;&nbsp;
+		<input type="email" name="confemail" id="confemail" placeholder="Must be same as email" autofocus required onchange="emailMatch()" style="width: 20%;"/><span id="confirmEmail" class="confirmEmail"></span><br><br>
+		<label>Security Question </label>&nbsp;&nbsp;&nbsp;&nbsp;
+		<input list="secq1" id="secqu1" required style="width: 20%;" placeholder="Choose a question"/><br><br>
+		<datalist id="secq1" >
+			<option value="Sum of 2 + 3 = " />
+			<option value="Sum of 100 + 200 = " />
+			<option value="23 * 100 = " />
+			<option value="Capital of India?" />
+			<option value="Capital of USA?" />
+		</datalist>
+		<label for="seca1">Security Answer </label>&nbsp;&nbsp;&nbsp;&nbsp;
+		<input type="text" name="seca1" id="seca1" autofocus required style="width: 20%;" placeholder="Enter a secret answer" />
+		<br><br>
+		<label>Security Question </label>&nbsp;&nbsp;&nbsp;&nbsp;
+		<input list="secq2" id="secqu2" required onchange="checkQ()" style="width: 20%;" placeholder="Choose a question"/><span id="confirmQ" class="confirmQ" ></span><br><br>
+		<datalist id="secq2" >
+			<option value="Sum of 8 + 5 = " />
+			<option value="Sum of 1500 + 500 = " />
+			<option value="20 * 500 = " />
+			<option value="Capital of England?" />
+			<option value="Capital of Russia?" />
+		</datalist>
+		<label for="seca2">Security Answer </label>&nbsp;&nbsp;&nbsp;&nbsp;
+		<input type="text" name="seca2" id="seca2" autofocus required style="width: 20%;" placeholder="Enter a secret answer" />
+		<br><br>
+
+		<label for="phn">Mobile </label>&nbsp;&nbsp;&nbsp;&nbsp;
+		<input type="tel" id="phn" required placeholder="xxx-xxx-xxxx" pattern="\d{3}[\-]\d{3}[\-]\d{4}" style="width: 20%;"/><br><br>
+		<label for="addr">Address </label>&nbsp;&nbsp;&nbsp;&nbsp;
+        <textarea rows="4" cols="50" style="vertical-align: middle"; style="width: 20%;" id="addr" required></textarea>
+        
+        <div id="myDiv" style="float: right">
+        <p style="font-size: 10px; font-weight: bold;">Select your ideal place</p>
+        <img id="drag1" src="images\sjsu.jpeg" draggable="true" ondragstart="drag(event)" width="60" height="50">
+        <img id="drag2" src="images\cisco.jpeg" draggable="true" ondragstart="drag(event)" width="60" height="50">
+        <img id="drag3" src="images\ms.jpeg" draggable="true" ondragstart="drag(event)" width="60" height="50"><br>
+        <p style="font-size: 10px; font-weight: bold;">Logos CAPTCHA Target Drop</p>
+        <div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)" style = "width:170px; height:70px; padding:10px; border:2px solid #aaaaaa; float:right;"></div>
+        </div><br>
+        <p style="font-size:120%;">Areas you may be interested in, please mention one or more: </p>&nbsp;&nbsp;&nbsp;&nbsp;
+        <textarea rows="10" cols="50" id="interest" required></textarea><br><br>
+		<footer >
+			<input type="submit" value="Register" id="register" onclick="checkForm()" style="margin-left: 50px" />&nbsp;&nbsp;&nbsp;&nbsp;
+			<input type="reset" value="Cancel" id="cancel"/>
+		</footer>
+	</form>
+	</div>
+</body>
+</html>	
