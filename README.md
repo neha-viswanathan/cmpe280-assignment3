@@ -14,5 +14,5 @@ npm install body-parser
 Now to run the code, enter 
 node server.js
 
-In a browser, open http://localhost:3001/
+In a browser, open http://localhost:3001/captcha_registration.html
 
