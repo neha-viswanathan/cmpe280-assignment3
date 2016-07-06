@@ -16,7 +16,6 @@ app.get('/captcha_registration.html', function(req, res) {
 
 //Post the data to server
 app.post('/Save', urlEncodedParser, function(req, res) {
-	// Prepare output in JSON format
 	response = {
 		uid:req.body.uid,
 		pwd:req.body.pwd,
